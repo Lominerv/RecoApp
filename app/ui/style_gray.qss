@@ -1,53 +1,58 @@
 /* =========================================================
-   🎨  ОСНОВНАЯ ТЕМА RecoApp
+   🎨  ОСНОВНАЯ ТЕМА RecoApp (слегка оптимизировано)
    Палитра:
    🟩 #2E3B3A — фон окна
    🟫 #3F4D4B — фон карточек/полей
    🤍 #EAE7DC — основной текст
    💚 #A3D9A5 — акцент (кнопки, hover)
-   🩶 #5B615E — вторичный текст
+   🩶 #5B615E — вторичный текст/границы
 ========================================================= */
 
-/* === 1. Базовая среда и фон === */
+/* === 1) БАЗОВАЯ СРЕДА И ФОН ============================ */
 QMainWindow, QDialog {
     background-color: #2E3B3A;
     color: #EAE7DC;
     border: none;
 }
 
-/* Контейнеры и скроллы не должны иметь фон */
+/* Контейнеры и вьюпорты скроллов — без собственного фона */
 QAbstractScrollArea,
 QAbstractScrollArea::viewport,
 QWidget#centralwidget {
     background: transparent;
 }
 
-/* === 2. Текстовые элементы === */
-QLabel, QCheckBox, QRadioButton, QGroupBox, QToolTip {
-    color: #EAE7DC;
-}
+/* === 2) ТЕКСТ/ПОДПИСИ/Тултипы ========================== */
+QLabel, QCheckBox, QRadioButton, QGroupBox, QToolTip { color: #EAE7DC; }
 
-/* === 3. Поля ввода, комбобоксы и числа === */
+/* === 3) ПОЛЯ ВВОДА / КОМБО / СПИНЫ ===================== */
 QLineEdit, QComboBox, QSpinBox, QDoubleSpinBox {
     background: #3F4D4B;
     color: #EAE7DC;
     border: 1px solid #5B615E;
     border-radius: 6px;
     padding: 4px 6px;
+
+    /* единый стиль выделения текста */
+    selection-background-color: #A3D9A5;
+    selection-color: #2E3B3A;
 }
-QLineEdit:focus {
-    border: 1px solid #8CCF90;   /* акцент при фокусе */
+QLineEdit:focus,
+QComboBox:focus,
+QSpinBox:focus,
+QDoubleSpinBox:focus {
+    border-color: #8CCF90;   /* акцент при фокусе */
 }
-QLineEdit::placeholder {
-    color: rgba(234,231,220,0.45);
-}
+QLineEdit::placeholder { color: rgba(234,231,220,0.45); }
+
+/* Выпадающий список комбо */
 QComboBox QAbstractItemView {
     background: #3F4D4B;
     color: #EAE7DC;
     border: 1px solid #5B615E;
 }
 
-/* === 4. Область каталога === */
+/* === 4) ОБЛАСТЬ КАТАЛОГА =============================== */
 QScrollArea#scrollCatalog,
 QScrollArea#scrollCatalog::viewport,
 QWidget#cardsContainer {
@@ -55,14 +60,14 @@ QWidget#cardsContainer {
     border: none;
 }
 
-/* === 5. Карточки книг === */
+/* === 5) КАРТОЧКИ КНИГ ================================== */
 QFrame[card="true"] {
     background: #3F4D4B;       /* 🟫 */
     border: 1px solid #5B615E; /* 🩶 */
     border-radius: 14px;
 }
 
-/* --- Текст внутри карточек --- */
+/* Текст внутри карточек */
 QFrame[card="true"] QLabel { color: #EAE7DC; }
 QFrame[card="true"] QLabel#lblAuthor,
 QFrame[card="true"] QLabel#lblTags {
@@ -71,7 +76,7 @@ QFrame[card="true"] QLabel#lblTags {
     font-weight: 500;
 }
 
-/* --- Кнопка в карточке "Подробнее" --- */
+/* Кнопка «Подробнее» в карточке */
 QFrame[card="true"] QPushButton#btnOpen {
     background: transparent;
     color: #D8E0D8;
@@ -92,7 +97,7 @@ QFrame[card="true"] QPushButton#btnOpen:pressed {
     color: #EAE7DC;
 }
 
-/* === 6. Кнопки и тулбары === */
+/* === 6) КНОПКИ / ТУЛБАРЫ =============================== */
 QToolBar {
     background: transparent;
     border: none;
@@ -100,7 +105,7 @@ QToolBar {
     padding: 2px;
 }
 
-/* --- Иконки / тулкнопки / избранное --- */
+/* Иконки/тулкнопки (в т.ч. «избранное») */
 QToolButton {
     background: transparent;
     color: #EAE7DC;
@@ -108,16 +113,14 @@ QToolButton {
     border-radius: 8px;
     padding: 4px 6px;
 }
-QToolButton:hover {
-    background: rgba(163, 217, 165, 0.18);
-}
+QToolButton:hover { background: rgba(163, 217, 165, 0.18); }
 QToolButton:pressed,
 QToolButton:checked {
     background: rgba(163, 217, 165, 0.30);
     border: 1px solid #A3D9A5;
 }
 
-/* --- Основные зелёные кнопки --- */
+/* Базовые зелёные кнопки */
 QPushButton {
     background: #A3D9A5;
     color: #2E3B3A;
@@ -127,119 +130,22 @@ QPushButton {
     min-height: 24px;
     font-weight: 500;
 }
-QPushButton:hover {
-    background: #89C990;
-    border-color: #89C990;
-}
-QPushButton:pressed {
-    background: #5B615E;
-    color: #EAE7DC;
-    border-color: #5B615E;
-}
+QPushButton:hover { background: #89C990; border-color: #89C990; }
+QPushButton:pressed { background: #5B615E; color: #EAE7DC; border-color: #5B615E; }
 QPushButton:disabled { opacity: 0.5; }
 
-/* === Оверрайд кнопок только на странице регистрации === */
-QWidget#pageRegister QPushButton {
-    /* эти строки перебьют базовый QPushButton */
-    min-height: 20px;           /* ниже/выше кнопку меняем здесь */
-    padding: 2px 8px;           /* внутренние отступы */
-    border-radius: 6px;         /* скругление */
+/* Кнопка избранного (если есть отдельный ID) */
+QPushButton#btnfav {
+    min-height: 20px;
+    border-radius: 6px;
     font-size: 13px;
     font-weight: 600;
 }
 
-/* Конкретные кнопки регистрации */
-QPushButton#btnDoRegister {
-    background: #A3D9A5;
-    color: #2E3B3A;
-    border: 1px solid #8CCF90;
-    margin-top: 3px;           /* отступ сверху от полей */
-}
-QPushButton#btnDoRegister:hover   { background: #95D091; }
-QPushButton#btnDoRegister:pressed { background: #86C77E; }
-
-QPushButton#btnBackToLogin {
-    background: transparent;
-    color: #EAE7DC;
-    border: 1px solid rgba(91,97,94,0.5);
-    margin-top: 8px;            /* расстояние между кнопками */
-}
-QPushButton#btnBackToLogin:hover {
-    border-color: #A3D9A5;
-    color: #A3D9A5;
-}
-
-/* === Регистрация: поля и подписи === */
-
-/* Подписи слева от полей (единая ширина и выравнивание) */
+/* === 7) СТРАНИЦЫ LOGIN / REGISTER ====================== */
+/* Общее для двух страниц: лейблы слева и поля вправо одинакового размера */
+QWidget#pageLogin QLabel[role="form-label"],
 QWidget#pageRegister QLabel[role="form-label"] {
-    color: #EAE7DC;
-    font-size: 13px;
-    font-weight: 500;
-    min-width: 90px;                          /* колонка подписей одинаковой ширины */
-    padding-right: 8px;                        /* небольшой отступ до поля */
-}
-
-/* Поля ввода — компактные и ровные */
-QWidget#pageRegister QLineEdit {
-    background: #3F4D4B;
-    color: #EAE7DC;
-    border: 1px solid rgba(91,97,94,0.6);
-    border-radius: 6px;
-
-    min-height: 24px;          /* высота поля */
-    padding: 3px 8px;          /* внутренние отступы (вертикаль/горизонталь) */
-    font-size: 13px;
-}
-
-/* Фокус, плейсхолдер и выделение текста */
-QWidget#pageRegister QLineEdit:focus {
-    border: 1px solid #8CCF90;               /* зелёный акцент при фокусе */
-}
-QWidget#pageRegister QLineEdit::placeholder {
-    color: rgba(234,231,220,0.45);           /* мягкий плейсхолдер */
-}
-QWidget#pageRegister QLineEdit {
-    selection-background-color: #8CCF90;     /* фон выделения текста */
-    selection-color: #2E3B3A;                /* цвет текста в выделении */
-}
-
-/* === Вход: кнопки, поля и подписи (всё в тех же размерах) === */
-
-/* Две кнопки — одинаковые габариты, без margin */
-QWidget#pageLogin QPushButton#btnLogin,
-QWidget#pageLogin QPushButton#btnRegister {
-    min-height: 20px;
-    padding: 4px 12px;
-    border: 1px solid transparent; /* одинаковая толщина рамки */
-    border-radius: 6px;
-    font: 600 13px "Segoe UI";
-}
-
-/* Войти — только цвета/состояния */
-QWidget#pageLogin QPushButton#btnLogin {
-    background: #A3D9A5;
-    color: #2E3B3A;
-    border-color: #8CCF90;
-}
-QWidget#pageLogin QPushButton#btnLogin:hover   { background: #95D091; }
-QWidget#pageLogin QPushButton#btnLogin:pressed { background: #86C77E; }
-
-/* Регистрация — только цвета/состояния */
-QWidget#pageLogin QPushButton#btnRegister {
-    background: transparent;
-    color: #EAE7DC;
-    border-color: rgba(91,97,94,0.5);
-}
-QWidget#pageLogin QPushButton#btnRegister:hover {
-    border-color: #A3D9A5;
-    color: #A3D9A5;
-}
-
-/* === Вход: поля и подписи === */
-
-/* Подписи к полям (логин/пароль) */
-QWidget#pageLogin QLabel[role="form-label"] {
     color: #EAE7DC;
     font-size: 13px;
     font-weight: 500;
@@ -247,50 +153,85 @@ QWidget#pageLogin QLabel[role="form-label"] {
     padding-right: 8px;
 }
 
-/* Поля ввода */
-QWidget#pageLogin QLineEdit {
+/* Поля ввода на обеих страницах (компакт) */
+QWidget#pageLogin QLineEdit,
+QWidget#pageRegister QLineEdit {
     background: #3F4D4B;
     color: #EAE7DC;
     border: 1px solid rgba(91,97,94,0.6);
     border-radius: 6px;
-
     min-height: 24px;
     padding: 3px 8px;
     font-size: 13px;
 }
-
-/* Фокус и плейсхолдер */
-QWidget#pageLogin QLineEdit:focus {
-    border: 1px solid #8CCF90;
-}
-QWidget#pageLogin QLineEdit::placeholder {
-    color: rgba(234,231,220,0.45);
-}
-
-/* Цвет выделения текста */
-QWidget#pageLogin QLineEdit {
+QWidget#pageLogin QLineEdit:focus,
+QWidget#pageRegister QLineEdit:focus { border-color: #8CCF90; }
+QWidget#pageLogin QLineEdit::placeholder,
+QWidget#pageRegister QLineEdit::placeholder { color: rgba(234,231,220,0.45); }
+QWidget#pageLogin QLineEdit,
+QWidget#pageRegister QLineEdit {
     selection-background-color: #8CCF90;
     selection-color: #2E3B3A;
 }
 
+/* Заголовки форм */
+QLabel#lblTitleLogin,
+QLabel#lblRegisterTitle { margin-bottom: 24px; }
+
+/* Сообщения об ошибке */
 QLabel#lblAuthError,
 QLabel#lblRegisterError {
-    color: #D66A6A;         /* базовый (спокойный) красный */
+    color: #D66A6A;
     font-size: 20px;
     font-weight: 500;
     padding-top: 4px;
     opacity: 0.6;
 }
 
-/* Заголовки форм (Вход / Регистрация) */
-QLabel#lblTitleLogin,
-QLabel#lblRegisterTitle {
-    margin-bottom: 24px;   /* 🔥 увеличь отступ вниз */
+/* Кнопки Login/Register — одинаковая геометрия */
+QWidget#pageLogin QPushButton#btnLogin,
+QWidget#pageLogin QPushButton#btnRegister {
+    min-height: 20px;
+    padding: 4px 12px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font: 600 13px "Segoe UI";
 }
 
+/* Состояния: Login — зелёная, Register — прозрачная */
+QWidget#pageLogin QPushButton#btnLogin {
+    background: #A3D9A5; color: #2E3B3A; border-color: #8CCF90;
+}
+QWidget#pageLogin QPushButton#btnLogin:hover   { background: #95D091; }
+QWidget#pageLogin PushButton#btnLogin:pressed  { background: #86C77E; }
 
+QWidget#pageLogin QPushButton#btnRegister {
+    background: transparent; color: #EAE7DC; border-color: rgba(91,97,94,0.5);
+}
+QWidget#pageLogin QPushButton#btnRegister:hover {
+    border-color: #A3D9A5; color: #A3D9A5;
+}
 
+/* Кнопки на странице регистрации (легкий оверрайд поверх базового QPushButton) */
+QWidget#pageRegister QPushButton {
+    min-height: 20px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+QPushButton#btnDoRegister {
+    background: #A3D9A5; color: #2E3B3A; border: 1px solid #8CCF90; margin-top: 3px;
+}
+QPushButton#btnDoRegister:hover   { background: #95D091; }
+QPushButton#btnDoRegister:pressed { background: #86C77E; }
 
+QPushButton#btnBackToLogin {
+    background: transparent; color: #EAE7DC; border: 1px solid rgba(91,97,94,0.5); margin-top: 8px;
+}
+QPushButton#btnBackToLogin:hover { border-color: #A3D9A5; color: #A3D9A5; }
+
+/* === 8) КОМБО НА СТРАНИЦЕ КАТАЛОГА ===================== */
 QWidget#pageCatalog QComboBox {
     background: #3F4D4B;
     color: #EAE7DC;
@@ -299,82 +240,16 @@ QWidget#pageCatalog QComboBox {
 }
 QWidget#pageCatalog QComboBox::drop-down { width: 0; border: 0; background: transparent; }
 QWidget#pageCatalog QComboBox::down-arrow { image: none; width: 0; height: 0; }
-
 QWidget#pageCatalog QComboBox QAbstractItemView {
-    background: #3F4D4B;
-    color: #EAE7DC;
-    border: 1px solid #5B615E;
+    background: #3F4D4B; color: #EAE7DC; border: 1px solid #5B615E;
     selection-background-color: #5B615E;
 }
 
-QPushButton#btnfav {
-    /* эти строки перебьют базовый QPushButton */
-    min-height: 20px;           /* ниже/выше кнопку меняем здесь */
-    border-radius: 6px;         /* скругление */
-    font-size: 13px;
-    font-weight: 600;
-}
-
-
-
-/* === Страница "Избранное": чёткий фон страницы === */
-QWidget#pageFavorites {
-    background-color: #2E3B3A;   /* фон окна */
-    color: #EAE7DC;
-}
-
-/* Скролл и его части на этой странице */
-QScrollArea#saFavorites {
-    background-color: #2E3B3A;
-    border: none;
-}
-QScrollArea#saFavorites::viewport {
-    background-color: #2E3B3A;
-    border: none;
-}
-
-/* Внутренний контейнер скролла (подставь своё имя, если другое) */
-QWidget#favFlowHost {
-    background-color: #2E3B3A;
-    border: none;
-}
-
-/* Заголовок */
-QWidget#pageFavorites QLabel#lblFav {
-    color: #EAE7DC;
-    font-size: 32px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-    padding: 6px 0;
-    border-bottom: 2px solid #A3D9A5;
-}
-
-
-
-/* === Страница "Рекомендации": чёткий фон страницы === */
-QWidget#pageRecommendations {
-    background-color: #2E3B3A;   /* фон окна */
-    color: #EAE7DC;
-}
-
-/* Скролл и его части на этой странице */
-QScrollArea#recScroll {
-    background-color: #2E3B3A;
-    border: none;
-}
-QScrollArea#recScroll::viewport {
-    background-color: #2E3B3A;
-    border: none;
-}
-
-/* Внутренний контейнер скролла (подставь своё имя, если другое) */
-QWidget#cardsContainer_rec {
-    background-color: #2E3B3A;
-    border: none;
-}
-
-/* Заголовок */
+/* === 9) СТРАНИЦЫ ИЗБРАННОЕ / РЕКОМЕНДАЦИИ =============== */
+/* общий фон + заголовки */
+QWidget#pageFavorites,
+QWidget#pageRecommendations { background-color: #2E3B3A; color: #EAE7DC; }
+QWidget#pageFavorites QLabel#lblFav,
 QWidget#pageRecommendations QLabel#lblRec {
     color: #EAE7DC;
     font-size: 32px;
@@ -385,90 +260,172 @@ QWidget#pageRecommendations QLabel#lblRec {
     border-bottom: 2px solid #A3D9A5;
 }
 
-/* ВАЖНО: не делаем * всё прозрачным, чтобы не убить фон карточек */
-
-/* === Общий вертикальный скроллбар === */
-QScrollBar:vertical {
-    background: rgba(178,229,214, 0.35);  /* 🟫 полупрозрачная дорожка */
-    width: 12px;                         /* аккуратная ширина */
+/* скроллы обеих страниц (объединены) */
+QScrollArea#saFavorites,
+QScrollArea#saFavorites::viewport,
+QScrollArea#recScroll,
+QScrollArea#recScroll::viewport,
+QWidget#favFlowHost,
+QWidget#cardsContainer_rec {
+    background-color: #2E3B3A;
     border: none;
-    margin: 0;                           /* без стрелок, поэтому убираем отступы */
-    border-radius: 6px;                  /* мягкие углы общей полосы */
 }
 
-/* === Ползунок (ползущая часть) === */
+/* === 10) СКРОЛЛБАР (вертикальный) ======================= */
+QScrollBar:vertical {
+    background: rgba(178,229,214, 0.35);
+    width: 12px;
+    border: none;
+    margin: 0;
+    border-radius: 6px;
+}
 QScrollBar::handle:vertical {
-    background: #3F4D4B;                 /* 🟫 фон карточек — плотный */
-    border-radius: 4px;                  /* лёгкое скругление */
+    background: #3F4D4B;
+    border-radius: 4px;
     min-height: 24px;
 }
-QScrollBar::handle:vertical:hover {
-    background: #425653;                 /* 🩶 чуть светлее при наведении */
-}
-
-/* === Убираем кнопки ↑ и ↓ полностью === */
+QScrollBar::handle:vertical:hover { background: #425653; }
 QScrollBar::sub-line:vertical,
-QScrollBar::add-line:vertical {
-    height: 0;
-    border: none;
-    background: none;
-}
-
-/* === Убираем фон между стрелками и ползунком (чтобы не мелькало белое) === */
+QScrollBar::add-line:vertical { height: 0; border: none; background: none; }
 QScrollBar::add-page:vertical,
-QScrollBar::sub-page:vertical {
-    background: transparent;
-}
+QScrollBar::sub-page:vertical { background: transparent; }
 
+/* === 11) ДИАЛОГ ДЕТАЛЕЙ КНИГИ ========================== */
 /* 1) Картинка без рамки */
-QLabel#lblCover {
-    border: none;
-    background: transparent;     /* или bg панели, если нужно: #3F4D4B */
-}
+QLabel#lblCover { border: none; background: transparent; }
 
-/* 2) QTextBrowser “плоский” с акцентом при фокусе */
+/* 2) Описание — «плоский» QTextBrowser с акцентом фокуса */
 QTextBrowser#teDescription {
-    background: #3F4D4B;         /* panel */
-    color: #EAE7DC;              /* text */
-    border: 1px solid #5B615E;   /* muted */
-    border-radius: 8px;
-    padding: 8px;
-    outline: none;
+    background: #3F4D4B; color: #EAE7DC;
+    border: 1px solid #5B615E; border-radius: 8px;
+    padding: 8px; outline: none;
     selection-background-color: #A3D9A5;
     selection-color: #2E3B3A;
 }
-QTextBrowser#teDescription:focus {
-    border-color: #A3D9A5;       /* accent */
-}
+QTextBrowser#teDescription:focus { border-color: #A3D9A5; }
 
-/* 3) Кнопка-иконка сердца чуть крупнее и без визуального “кнопочного” фона */
+/* 3) Кнопка-иконка сердца — без фона */
 QToolButton#btnAddFav {
-    border: none;
-    background: transparent;
-    padding: 2px;
+    border: none; background: transparent; padding: 2px;
 }
 QToolButton#btnAddFav:hover { filter: brightness(1.05); }
 QToolButton#btnAddFav:pressed { transform: scale(0.97); }
 
-
 /* 4) Разделитель между панелями */
 QSplitter::handle {
-    background-color: #353F3E;   /* немного темнее panel (#3F4D4B) */
-    border: none;
-    width: 3px;
-    margin: 0;
+    background-color: #353F3E;   /* чуть темнее panel */
+    border: none; width: 3px; margin: 0;
 }
-QSplitter::handle:hover {
-    background-color: #4A5856;   /* подсветка при наведении */
+QSplitter::handle:hover { background-color: #4A5856; }
+
+/* === 12) СТРАНИЦА «О ПРИЛОЖЕНИИ» ======================= */
+#pageAbout QLabel { font-size: 13pt; color: #EAE7DC; }
+QLabel#aboutTitle { font-size: 25pt; color: #EAE7DC; }
+
+
+/* --- Карточки статистики --- */
+QFrame#cardBooks,
+QFrame#cardUsers,
+QFrame#cardActive {
+    background-color: #3F4D4B;       /* тёмно-серый фон */
+    border: 2px solid #8CCF90;       /* зелёная рамка */
+    border-radius: 14px;             /* плавные углы */
+    padding: 8px;                    /* немного воздуха */
 }
 
-/* ====== О приложении ====== */
-#pageAbout QLabel {
-    font-size: 13pt; /* общий размер */
-    color: #EAE7DC;
+/* При наведении — лёгкое свечение */
+QFrame#cardBooks:hover,
+QFrame#cardUsers:hover,
+QFrame#cardActive:hover {
+    border-color: #A2E4A7;
+    background-color: #465954;
 }
 
-QLabel#aboutTitle {
-    font-size: 25pt; /* общий размер */
-    color: #EAE7DC;
+/* Подписи внутри карточек */
+QFrame#lblStatBooks,
+QFrame#lblStatUsers,
+QFrame#lblStatActive {
+    color: #EAE7DC;                  /* светлый текст */
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
+
+/* Если хочешь, можно добавить стиль для цифр (если QLabel с числом) */
+QFrameQLabel[class="valueLabel"] {
+    color: #FFFFFF;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+QDialog#addBookDialog, QDialog#editBookDialog {
+    background: #2E3B3A;            /* общий фон */
+    border: 1px solid #5B615E;
+    border-radius: 12px;
+}
+
+/* Заголовки и подписи форм */
+QDialog#addBookDialog QLabel,
+QDialog#editBookDialog QLabel {
+    color: #EAE7DC;
+    font-size: 13px;
+}
+
+/* Поля ввода */
+QDialog#addBookDialog QLineEdit,
+QDialog#addBookDialog QTextEdit,
+QDialog#editBookDialog QLineEdit,
+QDialog#editBookDialog QTextEdit {
+    background: #3F4D4B;
+    color: #EAE7DC;
+    border: 1px solid #5B615E;
+    border-radius: 8px;
+    padding: 6px 8px;
+}
+QDialog#addBookDialog QLineEdit:focus,
+QDialog#addBookDialog QTextEdit:focus,
+QDialog#editBookDialog QLineEdit:focus,
+QDialog#editBookDialog QTextEdit:focus {
+    border-color: #A3D9A5;
+}
+
+/* Кнопки */
+QDialog#addBookDialog QPushButton,
+QDialog#editBookDialog QPushButton {
+    background: #A3D9A5;
+    color: #2E3B3A;
+    border: 1px solid #A3D9A5;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-weight: 600;
+}
+QDialog#addBookDialog QPushButton:hover,
+QDialog#editBookDialog QPushButton:hover {
+    border-color: #8CCF90;
+}
+QDialog#addBookDialog QPushButton:pressed,
+QDialog#editBookDialog QPushButton:pressed {
+    background: #8CCF90;
+}
+
+/* Обложка */
+QDialog#addBookDialog QLabel#lblCover,
+QDialog#editBookDialog QLabel#lblCover {
+    background: #3F4D4B;            /* раньше был инлайн #f5f5f5 — убрали */
+    border: 1px dashed #5B615E;
+    color: #9AA19E;
+}
+
+/* Фон области обложки одинаковый в обоих диалогах */
+QLabel#lblCover {
+    background: #3F4D4B;          /* твой тёмный фон */
+    border: 1px dashed #5B615E;
+    color: #9AA19E;               /* цвет текста-плейсхолдера */
+    border-radius: 8px;
+}
+
+/* На всякий случай — фон родителя диалога */
+QDialog#addBookDialog, QDialog#editBookDialog {
+    background: #2E3B3A;
+}
+

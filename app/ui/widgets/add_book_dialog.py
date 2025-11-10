@@ -12,10 +12,11 @@ class AddBookDialog(QDialog):
     def __init__(self, parent = None):
         super().__init__(parent)
         self.setWindowTitle("Добавить книгу")
+        # self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
         self._cover = None
 
         # фиксированный размер окна
-        self.setFixedSize(560, 640)
+        self.setFixedSize(560, 700)
 
         root = QVBoxLayout(self)
         root.setContentsMargins(16, 16, 16, 16)
@@ -30,7 +31,7 @@ class AddBookDialog(QDialog):
         self.lblCover.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.lblCover.setFixedSize(200, 260)
         self.lblCover.setFrameShape(QFrame.Shape.Box)
-        self.lblCover.setStyleSheet("background: #f5f5f5;")
+        self.lblCover.setObjectName("lblCover")
 
         btnPick = QPushButton("Выбрать обложку…", self)
         btnPick.clicked.connect(self._pick_cover)
@@ -136,10 +137,3 @@ class AddBookDialog(QDialog):
             QMessageBox.warning(self, "Проверка", "Поля «Название», «Автор» и «Описание» обязательны.")
             return
         self.accept()
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = AddBookDialog()
-    window.show()
-    sys.exit(app.exec())

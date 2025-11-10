@@ -99,3 +99,16 @@ def get_book_by_id(book_id):
     if not row:
         return None
     return {"id": row[0], "title": row[1], "author": row[2], "description": row[3], "cover": row[4], "tags": row[5],}
+
+def update_book_by_title(title, new_author, new_desc, new_cover):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE books
+        SET author = ?, description = ?, cover = ?
+        WHERE title = ?
+    """, (new_author, new_desc, new_cover, title))
+    updated = cur.rowcount
+    conn.commit()
+    conn.close()
+    return updated

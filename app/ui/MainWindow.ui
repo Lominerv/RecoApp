@@ -495,7 +495,7 @@
                     </font>
                    </property>
                    <property name="text">
-                    <string>избранное</string>
+                    <string>Избранное</string>
                    </property>
                   </widget>
                  </item>
@@ -759,8 +759,8 @@ QToolButton#icoEmpty:focus {
                       <rect>
                        <x>0</x>
                        <y>0</y>
-                       <width>754</width>
-                       <height>466</height>
+                       <width>100</width>
+                       <height>30</height>
                       </rect>
                      </property>
                      <property name="sizePolicy">

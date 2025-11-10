@@ -1,7 +1,7 @@
 from app.repositories.tags_repo import link_book_tags, get_or_create_tag_id
 from app.services.guard import require_admin
 from app.services import auth_service
-from app.repositories.books_repo import count_books, insert_book, delete_book_by_title
+from app.repositories.books_repo import count_books, insert_book, delete_book_by_title, update_book_by_title
 from app.repositories.users_repo import count_users
 
 def get_dashboard_stats():
@@ -43,3 +43,12 @@ def delete_book(title):
     if n == 0:
         raise ValueError(f"Книга {title.strip()}, не найдена!")
     return n
+
+def edit_book(title, author=None, description=None, cover=None):
+    require_admin()
+    if not title.strip():
+        raise ValueError("Введите название книги.")
+    update = update_book_by_title(title, author, description, cover)
+    if update == 0:
+        raise ValueError(f"Книга {title} не найдена")
+    return update

@@ -7,12 +7,13 @@ from PyQt6.QtWidgets import QMainWindow, QPushButton, QMessageBox, QDialog, QGri
 
 from app.config import icon_path
 from app.services import recommendation_service, rating_service, favorites_service
-from app.services.admin_service import get_dashboard_stats, add_book, delete_book
+from app.services.admin_service import get_dashboard_stats, add_book, delete_book, edit_book
 from app.services.guard import require_admin
 from app.services.rating_service import get_book_avg
 from app.ui.book_details_dialog import BookDetailsDialog
 from app.ui.widgets.add_book_dialog import AddBookDialog
 from app.ui.widgets.book_card import BookCard
+from app.ui.widgets.edit_book_dialog import EditBookDialog
 from app.ui.widgets.fancy_message_box import FancyMessageBox
 from app.ui.widgets.flow_layout import FlowLayout
 from app.services.auth_service import login, create_user, logout, get_current_user
@@ -48,6 +49,21 @@ class MainWindow(QMainWindow):
         self._init_state()
         self._setup_toolbar_icons()
         self._connect_signal()
+
+
+    def _open_edit_book_dialog(self):
+        dlg = EditBookDialog()
+        if dlg.exec() != QDialog.DialogCode.Accepted:
+            return
+        payload = dlg.data()
+        try:
+            n = edit_book(title=payload["title"], author=payload["author"], description=payload["description"],
+                          cover=payload["cover"])
+            self.load_catalog(None)
+            self._refresh_admin_dashboard()
+            FancyMessageBox.information(self, "Успех", f"Обновленно записей {n}")
+        except Exception as e:
+            QMessageBox.warning(self, "Ошибка", f"Не удалось обновить книгу: {e}")
 
 
     def show_favorites(self):
@@ -186,6 +202,7 @@ class MainWindow(QMainWindow):
             self.load_catalog(None)
             self._refresh_admin_dashboard()
             QMessageBox.information(self, "Книга", f"Книга добавлена (id={new_id}).")
+            self.load_catalog(None)
         except Exception as e:
             QMessageBox.warning(self, "Ошибка", f"Не удалось добавить книгу: {e}")
 
@@ -284,11 +301,7 @@ class MainWindow(QMainWindow):
                                                self.load_catalog(
                                                    None if self.comboCategory.currentText() == "Все категории" else
                                                    self.comboCategory.currentText().lower(),
-                                                   q = self.leSearch.text().strip()
-                                               )
-                                            )
-
-
+                                                   q = self.leSearch.text().strip()))
 
 
     def logout_user(self):
@@ -472,7 +485,7 @@ class MainWindow(QMainWindow):
 
         self.lblAdminTitle = QLabel("Админ панель", self.pageAdmin)
         f = self.lblAdminTitle.font()
-        f.setPointSize(20)
+        f.setPointSize(40)
         f.setBold(True)
         self.lblAdminTitle.setFont(f)
 
@@ -487,7 +500,7 @@ class MainWindow(QMainWindow):
 
         def _make_stat_card(title):
             frame = QFrame(self.pageAdmin)
-            frame.setObjectName("statCard")
+            frame.setFixedSize(420, 300)
             frame.setFrameShape(QFrame.Shape.StyledPanel)
             frame.setProperty("card_metrics", True)
 
@@ -497,14 +510,15 @@ class MainWindow(QMainWindow):
 
             lblTit = QLabel(title, frame)
             ft = lblTit.font()
-            ft.setPointSize(11)
+            ft.setPointSize(24)
             ft.setBold(True)
             lblTit.setFont(ft)
+            lblTit.setWordWrap(True)
             lblTit.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 
             lblN = QLabel("—", frame)
             fn = lblN.font()
-            fn.setPointSize(24)
+            fn.setPointSize(40)
             fn.setBold(True)
             lblN.setFont(fn)
             lblN.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -517,6 +531,27 @@ class MainWindow(QMainWindow):
         cardBooks, self.lblStatBooks = _make_stat_card("Книг в каталоге")
         cardUsers, self.lblStatUsers = _make_stat_card("Зарегистрированных пользователей")
         cardActive, self.lblStatActive = _make_stat_card("Активных сейчас")
+
+        cardBooks.setObjectName("cardBooks")
+        cardUsers.setObjectName("cardUsers")
+        cardActive.setObjectName("cardActive")
+
+        self.lblStatBooks.setObjectName("lblStatBooks")
+        self.lblStatUsers.setObjectName("lblStatUsers")
+        self.lblStatActive.setObjectName("lblStatActive")
+
+        for w in (self.lblStatBooks, self.lblStatUsers, self.lblStatActive):
+            w.setObjectName("style_test_admin")
+            w.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+
+        # задать стиль только внутри admin-страницы
+        self.pageAdmin.setStyleSheet("""
+            QLabel#style_test_admin {
+                font-size: 40px;
+                font-weight: 700;
+            }
+        """)
+
 
         metricsWrap.addWidget(cardBooks, 0, 0)
         metricsWrap.addWidget(cardUsers, 0, 1)
@@ -531,6 +566,18 @@ class MainWindow(QMainWindow):
         f.setBold(True)
         f.setPointSize(16)
         btnAdd.setFont(f)
+        btnAdd.setFixedWidth(260)
+
+        btnEditBook = QPushButton(self)
+        self._set_icon(btnEditBook, 'rect.svg')
+        btnEditBook.setIconSize(QtCore.QSize(32, 32))
+        btnEditBook.setText("Редактировать книгу")
+        btnEditBook.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed))
+        f = btnEditBook.font()
+        f.setBold(True)
+        f.setPointSize(16)
+        btnEditBook.setFont(f)
+        btnEditBook.setFixedWidth(260)
 
         btnDel = QPushButton(self)
         self._set_icon(btnDel, 'del.svg')
@@ -541,9 +588,13 @@ class MainWindow(QMainWindow):
         f.setBold(True)
         f.setPointSize(16)
         btnDel.setFont(f)
+        btnDel.setFixedWidth(260)
 
+        root.addSpacing(100)
         root.addLayout(metricsWrap)
+        root.addSpacing(100)
         root.addWidget(btnAdd)
+        root.addWidget(btnEditBook)
         root.addWidget(btnDel)
         root.addStretch(1)
 
@@ -551,6 +602,7 @@ class MainWindow(QMainWindow):
         self._pages["admin"] = self.pageAdmin
         btnAdd.clicked.connect(self._open_add_book_dialog)
         btnDel.clicked.connect(self._delete_book_dialog)
+        btnEditBook.clicked.connect(self._open_edit_book_dialog)
 
     def _refresh_admin_dashboard(self):
         is_admin = self._is_admin_current()
