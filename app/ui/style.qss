@@ -1,0 +1,82 @@
+QMainWindow {
+    background-color: #f6f7fb;
+}
+
+/* Кнопки */
+QPushButton {
+    background-color: #4a6cf7;
+    color: white;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #5a7cff;
+}
+QPushButton:pressed {
+    background-color: #3a5ce7;
+}
+
+/* Кнопки инструментов */
+QToolButton {
+    border: none;
+    background: transparent;
+}
+QToolButton:hover {
+    background-color: #e8e9f1;
+    border-radius: 6px;
+}
+
+/* Поля ввода */
+QLineEdit {
+    border: 1px solid #c0c4d3;
+    border-radius: 4px;
+    padding: 4px;
+    background-color: white;
+}
+QLineEdit:focus {
+    border: 1px solid #4a6cf7;
+}
+
+/* Метки */
+QLabel {
+    color: #222;
+    font-size: 13px;
+}
+
+/* Текстовое поле описания */
+QTextBrowser {
+    border: 1px solid #d0d3e0;
+    border-radius: 6px;
+    padding: 6px;
+    background-color: #ffffff;
+}
+
+/* Карточка книги */
+QFrame[card="true"] {
+    border: 1px solid #d7d9e3;
+    border-radius: 10px;
+    background-color: #ffffff;
+}
+QFrame[card="true"]:hover {
+    border: 1px solid #4a6cf7;
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Кнопка "Подробнее" */
+QPushButton[text="Подробнее"] {
+    background-color: #4a6cf7;
+    color: #fff;
+    border-radius: 4px;
+    padding: 4px 10px;
+}
+QPushButton[text="Подробнее"]:hover {
+    background-color: #5a7cff;
+}
+
+/* Диалоговое окно */
+QDialog {
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+Я
