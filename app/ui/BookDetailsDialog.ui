@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>720</width>
-    <height>530</height>
+    <height>537</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -41,6 +41,12 @@
       <layout class="QHBoxLayout" name="headerlayout">
        <item alignment="Qt::AlignHCenter">
         <widget class="QFrame" name="header">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>100</height>
+          </size>
+         </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -48,7 +54,7 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
+          <item alignment="Qt::AlignHCenter">
            <widget class="QLabel" name="lblTitle">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -65,7 +71,7 @@
              <string>Название книги</string>
             </property>
             <property name="wordWrap">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -148,6 +154,12 @@
             </item>
             <item>
              <widget class="QLabel" name="lblAuthor">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="font">
                <font>
                 <pointsize>14</pointsize>
@@ -168,6 +180,12 @@
             </item>
             <item>
              <widget class="QLabel" name="lblTags">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="font">
                <font>
                 <pointsize>14</pointsize>
@@ -390,19 +408,6 @@
         </item>
        </layout>
       </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
      </item>
     </layout>
    </item>

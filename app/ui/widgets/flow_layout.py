@@ -11,10 +11,29 @@ class FlowLayout(QLayout):
 
 
         #--API--
-    def addItem(self, item): self._items.append(item)
-    def count(self): return len(self._items)
-    def itemAt(self, i): return self._items[i] if i < len(self._items) else None
-    def takeAt(self, i): return self._items.pop(i) if i < len(self._items) else None
+
+    def addItem(self, item):
+        self._items.append(item)
+        self.invalidate()
+
+    def count(self):
+        return len(self._items)
+
+    def itemAt(self, i):
+        return self._items[i] if i < len(self._items) else None
+
+    def takeAt(self, i):
+        if i < len(self._items):
+            item = self._items.pop(i)
+            self.invalidate()
+            return item
+        return None
+
+    def invalidate(self):
+        super().invalidate()
+        parent = self.parentWidget()
+        if parent is not None:
+            parent.updateGeometry()
 
     #запрет самостоятельного увеличения
     def expandingDirections(self): return Qt.Orientations(0)

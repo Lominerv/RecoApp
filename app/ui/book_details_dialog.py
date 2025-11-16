@@ -21,12 +21,14 @@ class BookDetailsDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         uic.loadUi(_BOOK_DLG_UI, self)
-        self.setFixedSize(750, 550)
+        self.setFixedSize(750, 600)
 
-
-        # self.lblCover = QLabel("Обложка", self)
-        # self.lblCover.setObjectName("cover")  # <— добавь
-        # self.lblCover.setFrameShape(QFrame.Shape.NoFrame)
+        self.lblCover.setFixedSize(250, 350)  # область под обложку
+        self.lblCover.setAlignment(
+            Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter
+        )
+        # self.lblCover.setFrameShape(QFrame.Shape.Box)  # по желанию – рамочка
+        self.lblCover.setScaledContents(False)
 
         self._book_id = None
         self._my_rating = 0
@@ -34,12 +36,9 @@ class BookDetailsDialog(QDialog):
         self.btnAddFav.setCheckable(True)
         self.btnAddFav.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btnAddFav.setAutoRaise(True)
-        # self.btnAddFav.setStyleSheet("""
-        # QToolButton {
-        #     border: none;
-        #     background: transparent;
-        # }
-        # """)
+
+        self.lblCover.setStyleSheet("background: transparent; border: none;")
+        self.lblCover.setFrameShape(QFrame.Shape.NoFrame)
 
         self._icon_state()
         self._connect_signal()
@@ -71,9 +70,20 @@ class BookDetailsDialog(QDialog):
         px = book.get("cover_pixmap")
         self.lblCover.setFrameShape(QFrame.Shape.NoFrame)
         if isinstance(px, QPixmap) and not px.isNull():
-            self.lblCover.setPixmap(px)
-            self.lblCover.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)
+            # масштабируем под размер lblCover, но с сохранением пропорций
+            target_size = self.lblCover.size()  # 260x360 из __init__
+            scaled = px.scaled(
+                target_size,
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation,
+            )
+            self.lblCover.setPixmap(scaled)
+            self.lblCover.setAlignment(
+                Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter
+            )
+            self.lblCover.setText("")  # на всякий случай очищаем текст
         else:
+            self.lblCover.setPixmap(QPixmap())  # убираем старую картинку, если была
             self.lblCover.setText("Нет обложки")
 
         try:

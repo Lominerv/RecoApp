@@ -246,6 +246,22 @@ class MainWindow(QMainWindow):
             card.openRequested.connect(self.show_book_details)
             self.flow.addWidget(card)
 
+
+        self.flow.invalidate()
+
+        viewport = self.scrollCatalog.viewport()
+        width = viewport.width()
+        if width > 0:
+            # рассчитываем нужную высоту под все карточки
+            try:
+                needed_height = self.flow.heightForWidth(width)
+            except Exception:
+                needed_height = self.cardsContainer.sizeHint().height()
+
+            self.cardsContainer.setMinimumHeight(needed_height)
+            self.cardsContainer.resize(width, needed_height)
+            self.cardsContainer.updateGeometry()
+
     def show_book_details(self, book_id):
         try:
             book = get_book_details(book_id)
