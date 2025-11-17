@@ -39,7 +39,7 @@ def get_recommendations(limit: int = 15) -> list[dict]:
     tag_counter = _collect_tag_freq(base_ids)
     if not tag_counter:
         return []
-    top_tags = [t for t, _ in tag_counter.most_common(3)] #3 самых популярных тега
+    top_tags = [t for t, _ in tag_counter.most_common(3)]
     rec_by_id = {}
     for tag in top_tags:
         for book in get_books(tag=tag, limit=limit):

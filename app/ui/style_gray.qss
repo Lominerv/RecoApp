@@ -429,3 +429,6 @@ QDialog#addBookDialog, QDialog#editBookDialog {
     background: #2E3B3A;
 }
 
+
+
+

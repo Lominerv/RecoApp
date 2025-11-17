@@ -106,29 +106,44 @@ class MainWindow(QMainWindow):
             self.flowFav.addWidget(card)
 
     def click_recommendation(self):
+        # 1. Проверка входа
         if get_current_user() is None:
-            if get_current_user() is None:
-                res = FancyMessageBox.question(
-                    self,
-                    "Вход",
-                    "Для получения рекомендаций требуется вход, желаете войти?"
-                )
-                if res == QMessageBox.StandardButton.Yes:
-                    self.navigate('auth')
-                return
-            else:
-                self.navigate('recomendations')
+            res = FancyMessageBox.question(
+                self,
+                "Вход",
+                "Для получения рекомендаций требуется вход, желаете войти?"
+            )
+            if res == QMessageBox.StandardButton.Yes:
+                self.navigate('auth')
+            return  # без входа дальше не идём
 
+        # 2. Сразу открываем страницу рекомендаций (как было раньше)
         self.navigate('recomendations')
+
+        # 3. Считаем базовые книги: оценки ∪ избранное
         try:
-            n = rating_service.get_my_rated_count()
+            rated_ids = set(rating_service.list_my_rated_ids())
         except rating_service.NotAuthenticatedError:
-            n = 0
-        if n < 3:
+            rated_ids = set()
+
+        try:
+            fav_ids = set(favorites_service.get_favorite_book_ids())
+        except favorites_service.NotAuthenticatedError:
+            fav_ids = set()
+
+        base_count = len(rated_ids | fav_ids)
+
+        # 4. Проверяем порог в 3 книги
+        if base_count < 3:
             self.contentStack.setCurrentWidget(self.pageEmpty)
             if hasattr(self, "lblEmpty") and self.lblEmpty:
-                self.lblEmpty.setText(f"Для рекомендаций нужно минимум 3 оценки.\nУ вас сейчас: {n}/3")
+                self.lblEmpty.setText(
+                    "Для рекомендаций нужно минимум 3 книги в оценках или избранном.\n"
+                    f"Сейчас: {base_count}/3"
+                )
             return
+
+        # 5. Всё ок — грузим рекомендации
         self.load_recommendations()
 
     def load_recommendations(self):
@@ -136,20 +151,35 @@ class MainWindow(QMainWindow):
         try:
             books = recommendation_service.get_recommendations(limit=15)
         except recommendation_service.NotEnoughData:
+            # Сюда попадаем, если даже с учётом избранного и оценок (< 3 книг)
             self.contentStack.setCurrentWidget(self.pageEmpty)
+
             try:
-                n = rating_service.get_my_rated_count()
+                rated_ids = set(rating_service.list_my_rated_ids())
             except rating_service.NotAuthenticatedError:
-                n = 0
+                rated_ids = set()
+
+            try:
+                fav_ids = set(favorites_service.get_favorite_book_ids())
+            except favorites_service.NotAuthenticatedError:
+                fav_ids = set()
+
+            base_count = len(rated_ids | fav_ids)
+
             if hasattr(self, "lblEmpty") and self.lblEmpty:
-                self.lblEmpty.setText(f"Для рекомендаций нужно минимум 3 оценки.\nУ вас сейчас: {n}/3")
+                self.lblEmpty.setText(
+                    "Для рекомендаций нужно минимум 3 книги в оценках или избранном.\n"
+                    f"Сейчас: {base_count}/3"
+                )
             return
 
+        # Если рекомендаций по тегам нет
         if not books:
             self.contentStack.setCurrentWidget(self.pageList)
             self.flowRec.addWidget(QLabel("Пока нет рекомендаций по вашим тегам"))
             return
 
+        # Есть книги → показываем список
         self.contentStack.setCurrentWidget(self.pageList)
         for book in books:
             card = BookCard()
@@ -237,7 +267,7 @@ class MainWindow(QMainWindow):
             item = self.flow.takeAt(0)
             w = item.widget()
             if w is not None:
-                w.setParent(None)  # отцепить от родителя
+                w.setParent(None)
                 w.deleteLater()
 
         for book in books:
@@ -248,19 +278,6 @@ class MainWindow(QMainWindow):
 
 
         self.flow.invalidate()
-
-        viewport = self.scrollCatalog.viewport()
-        width = viewport.width()
-        if width > 0:
-            # рассчитываем нужную высоту под все карточки
-            try:
-                needed_height = self.flow.heightForWidth(width)
-            except Exception:
-                needed_height = self.cardsContainer.sizeHint().height()
-
-            self.cardsContainer.setMinimumHeight(needed_height)
-            self.cardsContainer.resize(width, needed_height)
-            self.cardsContainer.updateGeometry()
 
     def show_book_details(self, book_id):
         try:
@@ -456,6 +473,7 @@ class MainWindow(QMainWindow):
         self._set_icon(self.actionSignInOut, "user.svg")
         self._set_icon(self.actionAbout, "info.svg")
         self._set_icon(self.actionExit_door, "exit_door.svg")
+        self._set_icon(self.icoEmpty, "war.svg")
 
         group = QActionGroup(self)
         group.setExclusive(True)

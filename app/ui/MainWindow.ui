@@ -36,7 +36,7 @@
       <item>
        <widget class="QStackedWidget" name="stackMain">
         <property name="currentIndex">
-         <number>2</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="pageAbout">
          <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -282,8 +282,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>100</width>
-                 <height>30</height>
+                 <width>774</width>
+                 <height>501</height>
                 </rect>
                </property>
                <property name="sizePolicy">
@@ -546,7 +546,7 @@
                <string>Режим отображения рекомендаций</string>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="pageEmpty">
                <property name="sizePolicy">
@@ -637,7 +637,7 @@ QToolButton#icoEmpty:focus {
                     </property>
                     <property name="minimumSize">
                      <size>
-                      <width>300</width>
+                      <width>390</width>
                       <height>0</height>
                      </size>
                     </property>
@@ -656,7 +656,7 @@ QToolButton#icoEmpty:focus {
                      <string>Подсказка пустого состояния</string>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">color: #666</string>
+                     <string notr="true"/>
                     </property>
                     <property name="text">
                      <string>Чтобы получить рекомендации, оцените хотя бы 3 книги</string>
@@ -764,8 +764,8 @@ QToolButton#icoEmpty:focus {
                       <rect>
                        <x>0</x>
                        <y>0</y>
-                       <width>100</width>
-                       <height>30</height>
+                       <width>754</width>
+                       <height>466</height>
                       </rect>
                      </property>
                      <property name="sizePolicy">

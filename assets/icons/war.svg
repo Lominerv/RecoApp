@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+    width="64"
+    height="64"
+    viewBox="0 0 64 64"
+    xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    aria-label="Warning: need at least 3 rated books">
+
+    <!-- Треугольник-предупреждение -->
+    <path
+        d="M32 6 L58 54 H6 Z"
+        fill="none"
+        stroke="#6DD6B7"
+        stroke-width="3.2"
+        stroke-linejoin="round" />
+
+    <!-- Мягкий внутренний фон, чтобы знак был читаемым на тёмном фоне -->
+    <path
+        d="M32 11 L53 51 H11 Z"
+        fill="rgba(0,0,0,0.12)" />
+
+    <!-- Восклицательный знак -->
+    <!-- «палочка» -->
+    <rect
+        x="29.5"
+        y="22"
+        width="5"
+        height="18"
+        rx="2.5"
+        fill="#6DD6B7" />
+
+    <!-- «точка» -->
+    <circle
+        cx="32"
+        cy="46"
+        r="3"
+        fill="#6DD6B7" />
+</svg>
