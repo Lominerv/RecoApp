@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="RecoApp icon">
+  <!-- Фон -->
+  <rect x="8" y="8" width="240" height="240" rx="48" fill="#3F4D4B"/>
+  <!-- Буква R -->
+  <path fill="#EAE7DC" d="M86 72h50c28 0 46 16 46 40 0 16-8 29-22 36l23 36h-34l-18-30h-19v30H86V72zm32 24v34h17c13 0 21-6 21-17s-8-17-21-17h-17z"/>
+  <!-- Галочка рекомендации -->
+  <path fill="#7FBF80" d="M150 168c-2 0-4-1-5-3l-16-16 12-12 9 9 21-21 12 12-25 25c-2 2-4 3-6 3z"/>
+</svg>

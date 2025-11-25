@@ -68,6 +68,19 @@ def delete_book_by_title(title):
     conn.close()
     return deleted
 
+def delete_book_by_title_author(title, author):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        "DELETE FROM books WHERE title = ? AND author = ?",
+        (title.strip(), author.strip())
+    )
+    deleted = cur.rowcount
+    conn.commit()
+    conn.close()
+    return deleted
+
+
 def insert_book(title, author, description, cover_relpath):
     conn = get_connection()
     cur = conn.cursor()

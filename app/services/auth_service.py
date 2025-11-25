@@ -24,21 +24,6 @@ def logout():
 def _check_password(password, hashed):
     return bcrypt.checkpw(password.encode("utf-8"), hashed.encode("utf-8"))
 
-# def login(email, password):
-#     global _current_user
-#     user = find_by_email(email.lower())
-#     if not user:
-#         raise ValueError("Нет пользователя с такой почтой")
-#     user_id, email, username, password_hash = user
-#     if _check_password(password, password_hash):
-#         _current_user = {"id": user_id, "email": email, "username": username}
-#         return _current_user
-#     else:
-#         raise ValueError("Неверный пароль")
-
-
-
-
 def _strip_invisible(s):
     if s is None:
         return ""
